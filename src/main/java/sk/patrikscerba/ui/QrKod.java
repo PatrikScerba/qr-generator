@@ -1,6 +1,12 @@
 package sk.patrikscerba.ui;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 
 public class QrKod extends JFrame {
 
@@ -33,7 +39,7 @@ public class QrKod extends JFrame {
 
     }
 
-    // Príprava vCard textu (QR generovanie príde v ďalšom kroku)
+    // Načíta údaje z formulára, vytvorí vCard text, vygeneruje QR a zobrazí ho v UI
     private void vygeneruj() {
         String meno = jTextKrstneMeno.getText().trim();
         String priezvisko = jTextPriezvisko.getText().trim();
@@ -53,10 +59,26 @@ public class QrKod extends JFrame {
         }
 
         String vKarta = vytvorVKartu(meno, priezvisko, telefon, email);
-        System.out.println(vKarta);
+
+        try {
+            BufferedImage qrImage = vytvorQrObrazok(vKarta, 300, 300);
+
+            generovatQrButton.setEnabled(false);
+
+            // Zobrazenie QR kódu v UI
+            qrObrazokLabel.setIcon(new ImageIcon(qrImage));
+            qrObrazokLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            qrObrazokLabel.setVerticalAlignment(SwingConstants.CENTER);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Chyba pri generovaní QR kódu: " + e.getMessage(),
+                    "Chyba",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    // Vytvorenie vCard formátu
+    // Vytvorí vCard (VERSION 3.0) text z údajov z formulára
     private String vytvorVKartu(String meno, String priezvisko, String telefon, String email) {
         return """
                 BEGIN:VCARD
@@ -67,5 +89,15 @@ public class QrKod extends JFrame {
                 EMAIL:%s
                 END:VCARD
                 """.formatted(priezvisko, meno, meno, priezvisko, telefon, email);
+    }
+
+    // Vygeneruje QR obrázok zo zadaného textu pomocou knižnice ZXing
+    private BufferedImage vytvorQrObrazok(String text, int sirka, int vyska) throws Exception {
+        BitMatrix matrix = new MultiFormatWriter()
+                .encode(text, BarcodeFormat.QR_CODE, sirka, vyska);
+
+        return MatrixToImageWriter.toBufferedImage(matrix);
+
+
     }
 }
