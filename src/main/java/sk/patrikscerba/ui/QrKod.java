@@ -29,6 +29,43 @@ public class QrKod extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        generovatQrButton.addActionListener(e -> vygeneruj());
 
+    }
+
+    // Príprava vCard textu (QR generovanie príde v ďalšom kroku)
+    private void vygeneruj() {
+        String meno = jTextKrstneMeno.getText().trim();
+        String priezvisko = jTextPriezvisko.getText().trim();
+        String telefon = jTextTelefonneCislo.getText().trim();
+        String email = jTextEmail.getText().trim();
+
+        // Overenie, či je aspoň jedno pole vyplnené
+        if (meno.isEmpty()
+                && priezvisko.isEmpty()
+                && telefon.isEmpty()
+                && email.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Prosím, vyplňte aspoň jedno pole.",
+                    "Chyba",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String vKarta = vytvorVKartu(meno, priezvisko, telefon, email);
+        System.out.println(vKarta);
+    }
+
+    // Vytvorenie vCard formátu
+    private String vytvorVKartu(String meno, String priezvisko, String telefon, String email) {
+        return """
+                BEGIN:VCARD
+                VERSION:3.0
+                N:%s;%s
+                FN:%s %s
+                TEL:%s
+                EMAIL:%s
+                END:VCARD
+                """.formatted(priezvisko, meno, meno, priezvisko, telefon, email);
     }
 }
