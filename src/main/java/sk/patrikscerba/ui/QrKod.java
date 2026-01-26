@@ -15,19 +15,25 @@ public class QrKod extends JFrame {
     private JTextField jTextPriezvisko;
     private JTextField jTextTelefonneCislo;
     private JTextField jTextEmail;
+    private JTextField jTextIban;
+    private JTextField JTextPoznamka;
 
     private JLabel krstneMenoLabel;
     private JLabel priezviskoLabel;
     private JLabel telefonneCisloLabel;
     private JLabel emailLabel;
+    private JLabel ibanLabel;
+    private JLabel poznamkaLabel;
 
     private JLabel qrObrazokLabel;
 
     private JButton generovatQrButton;
+    private JButton generovatTextButton;
     private JButton ulozitQrButton;
     private JButton znovaVygenerovatButton;
 
 
+    // Nastavenie okna pre generovanie QR kódov
     public QrKod() {
         setContentPane(mainPanel);
         setTitle("QR generovanie");
@@ -39,6 +45,8 @@ public class QrKod extends JFrame {
 
         znovaVygenerovatButton.addActionListener(e -> vycistitFormular());
 
+        generovatTextButton.addActionListener(e -> vygenerujTextQr());
+
     }
 
     // Načíta údaje z formulára, vytvorí vCard text, vygeneruje QR a zobrazí ho v UI
@@ -47,12 +55,16 @@ public class QrKod extends JFrame {
         String priezvisko = jTextPriezvisko.getText().trim();
         String telefon = jTextTelefonneCislo.getText().trim();
         String email = jTextEmail.getText().trim();
+        String iban = jTextIban.getText().trim();
+        String poznamka = JTextPoznamka.getText().trim();
 
         // Overenie, či je aspoň jedno pole vyplnené
         if (meno.isEmpty()
                 && priezvisko.isEmpty()
                 && telefon.isEmpty()
                 && email.isEmpty()
+                && iban.isEmpty()
+                && poznamka.isEmpty()
 
         ) {
             JOptionPane.showMessageDialog(this,
@@ -89,7 +101,11 @@ public class QrKod extends JFrame {
         jTextPriezvisko.setText("");
         jTextTelefonneCislo.setText("");
         jTextEmail.setText("");
+        jTextIban.setText("");
+        JTextPoznamka.setText("");
+
         qrObrazokLabel.setIcon(null);
+
         generovatQrButton.setEnabled(true);
         znovaVygenerovatButton.setEnabled(true);
     }
@@ -114,5 +130,46 @@ public class QrKod extends JFrame {
 
         return MatrixToImageWriter.toBufferedImage(matrix);
 
+    }
+
+    // Vygeneruje QR kód zo zadaného textu
+    private void vygenerujTextQr() {
+        String meno = jTextKrstneMeno.getText().trim();
+        String priezvisko = jTextPriezvisko.getText().trim();
+        String telefon = jTextTelefonneCislo.getText().trim();
+        String email = jTextEmail.getText().trim();
+        String iban = jTextIban.getText().trim();
+        String poznamka = JTextPoznamka.getText().trim();
+
+        if (meno.isEmpty() && priezvisko.isEmpty() && telefon.isEmpty()
+                && email.isEmpty() && iban.isEmpty() && poznamka.isEmpty()) {
+
+            JOptionPane.showMessageDialog(this,
+                    "Prosím, vyplňte aspoň jedno pole.",
+                    "Chyba",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String text =
+                "\nMENO=" + meno +
+                        "; \nPRIEZVISKO=" + priezvisko +
+                        "; \nTEL=" + telefon +
+                        "; \nEMAIL=" + email +
+                        "; \nIBAN=" + iban +
+                        "; \nPOZNAMKA=" + poznamka;
+
+        try {
+            BufferedImage qrImage = vytvorQrObrazok(text, 350, 350);
+            qrObrazokLabel.setIcon(new ImageIcon(qrImage));
+            qrObrazokLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            qrObrazokLabel.setVerticalAlignment(SwingConstants.CENTER);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                    "Chyba pri generovaní QR: " + e.getMessage(),
+                    "Chyba",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
