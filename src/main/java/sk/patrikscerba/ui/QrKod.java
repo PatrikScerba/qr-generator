@@ -33,9 +33,11 @@ public class QrKod extends JFrame {
         setTitle("QR generovanie");
         setSize(500, 650);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         generovatQrButton.addActionListener(e -> vygeneruj());
+
+        znovaVygenerovatButton.addActionListener(e -> vycistitFormular());
 
     }
 
@@ -50,7 +52,9 @@ public class QrKod extends JFrame {
         if (meno.isEmpty()
                 && priezvisko.isEmpty()
                 && telefon.isEmpty()
-                && email.isEmpty()) {
+                && email.isEmpty()
+
+        ) {
             JOptionPane.showMessageDialog(this,
                     "Prosím, vyplňte aspoň jedno pole.",
                     "Chyba",
@@ -64,6 +68,7 @@ public class QrKod extends JFrame {
             BufferedImage qrImage = vytvorQrObrazok(vKarta, 300, 300);
 
             generovatQrButton.setEnabled(false);
+            znovaVygenerovatButton.setEnabled(true);
 
             // Zobrazenie QR kódu v UI
             qrObrazokLabel.setIcon(new ImageIcon(qrImage));
@@ -76,6 +81,17 @@ public class QrKod extends JFrame {
                     "Chyba",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    // Vyčistí formulár pre nové zadanie údajov
+    private void vycistitFormular() {
+        jTextKrstneMeno.setText("");
+        jTextPriezvisko.setText("");
+        jTextTelefonneCislo.setText("");
+        jTextEmail.setText("");
+        qrObrazokLabel.setIcon(null);
+        generovatQrButton.setEnabled(true);
+        znovaVygenerovatButton.setEnabled(true);
     }
 
     // Vytvorí vCard (VERSION 3.0) text z údajov z formulára
@@ -97,7 +113,6 @@ public class QrKod extends JFrame {
                 .encode(text, BarcodeFormat.QR_CODE, sirka, vyska);
 
         return MatrixToImageWriter.toBufferedImage(matrix);
-
 
     }
 }
