@@ -26,7 +26,7 @@ public class QrKod extends JFrame {
 
     private JLabel qrObrazokLabel;
 
-    private JButton generovatQrButton;
+    private JButton generovatVizitkuButton;
     private JButton generovatTextButton;
     private JButton ulozitQrButton;
     private JButton znovaVygenerovatButton;
@@ -44,7 +44,12 @@ public class QrKod extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        generovatQrButton.addActionListener(e -> vygeneruj());
+        ulozitQrButton.setEnabled(false);
+        generovatTextButton.setEnabled(true);
+        znovaVygenerovatButton.setEnabled(true);
+        generovatVizitkuButton.setEnabled(true);
+
+        generovatVizitkuButton.addActionListener(e -> vygenerujVizitku());
 
         znovaVygenerovatButton.addActionListener(e -> vycistitFormular());
 
@@ -60,7 +65,7 @@ public class QrKod extends JFrame {
     }
 
     // Načíta údaje z formulára a cez QR servis vygeneruje vizitkoví QR kód, ktorý zobrazí v UI
-    private void vygeneruj() {
+    private void vygenerujVizitku() {
         String meno = jTextKrstneMeno.getText();
         String priezvisko = jTextPriezvisko.getText();
         String telefon = jTextTelefonneCislo.getText();
@@ -69,14 +74,15 @@ public class QrKod extends JFrame {
         try {
             BufferedImage qr = qrServis.vygenerujVizitkuQr(meno, priezvisko, telefon, email);
 
-            poslednyQrObrazok = qr;
-            generovatQrButton.setEnabled(false);
-            znovaVygenerovatButton.setEnabled(true);
-
             // Zobrazenie QR kódu v UI
             qrObrazokLabel.setIcon(new ImageIcon(qr));
             qrObrazokLabel.setHorizontalAlignment(SwingConstants.CENTER);
             qrObrazokLabel.setVerticalAlignment(SwingConstants.CENTER);
+            poslednyQrObrazok = qr;
+            generovatVizitkuButton.setVisible(false);
+            znovaVygenerovatButton.setEnabled(true);
+            generovatTextButton.setEnabled(false);
+            ulozitQrButton.setEnabled(true);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
@@ -104,6 +110,9 @@ public class QrKod extends JFrame {
             qrObrazokLabel.setIcon(new ImageIcon(qr));
             qrObrazokLabel.setHorizontalAlignment(SwingConstants.CENTER);
             qrObrazokLabel.setVerticalAlignment(SwingConstants.CENTER);
+            generovatVizitkuButton.setEnabled(false);
+            generovatTextButton.setEnabled(false);
+            ulozitQrButton.setEnabled(true);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
@@ -123,8 +132,13 @@ public class QrKod extends JFrame {
         JTextPoznamka.setText("");
 
         qrObrazokLabel.setIcon(null);
+        poslednyQrObrazok = null;
 
-        generovatQrButton.setEnabled(true);
+        generovatVizitkuButton.setVisible(true);
         znovaVygenerovatButton.setEnabled(true);
+        generovatTextButton.setEnabled(true);
+
+        ulozitQrButton.setEnabled(false);
+
     }
 }
