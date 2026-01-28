@@ -1,5 +1,6 @@
 package sk.patrikscerba.ui;
 
+import sk.patrikscerba.app.QrUkladanieServis;
 import sk.patrikscerba.app.QrServis;
 
 import javax.swing.*;
@@ -30,7 +31,10 @@ public class QrKod extends JFrame {
     private JButton ulozitQrButton;
     private JButton znovaVygenerovatButton;
 
+    private final QrUkladanieServis qrUkladanieServis = new QrUkladanieServis();
     private final QrServis qrServis = new QrServis();
+
+    private BufferedImage poslednyQrObrazok;
 
     // UI okno pre generovanie QR kódov
     public QrKod() {
@@ -46,6 +50,13 @@ public class QrKod extends JFrame {
 
         generovatTextButton.addActionListener(e -> vygenerujTextQr());
 
+        ulozitQrButton.addActionListener(e -> {
+
+            if (poslednyQrObrazok == null) return;
+            qrUkladanieServis.ulozQr(poslednyQrObrazok);
+
+        });
+
     }
 
     // Načíta údaje z formulára a cez QR servis vygeneruje vizitkoví QR kód, ktorý zobrazí v UI
@@ -58,6 +69,7 @@ public class QrKod extends JFrame {
         try {
             BufferedImage qr = qrServis.vygenerujVizitkuQr(meno, priezvisko, telefon, email);
 
+            poslednyQrObrazok = qr;
             generovatQrButton.setEnabled(false);
             znovaVygenerovatButton.setEnabled(true);
 
@@ -87,6 +99,8 @@ public class QrKod extends JFrame {
 
         try {
             BufferedImage qr = qrServis.vygenerujTextQr(meno, priezvisko, telefon, email, iban, poznamka);
+
+            poslednyQrObrazok = qr;
             qrObrazokLabel.setIcon(new ImageIcon(qr));
             qrObrazokLabel.setHorizontalAlignment(SwingConstants.CENTER);
             qrObrazokLabel.setVerticalAlignment(SwingConstants.CENTER);
