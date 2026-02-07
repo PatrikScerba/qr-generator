@@ -11,19 +11,19 @@ import java.nio.file.Path;
 public class QrUkladanieServis {
 
     // Priečinok, do ktorého sa uloží QR obrázok
-    private static final String QR_SUBOR = "qr_obrazok";
+    private static final String QR_PRIECINOK = "qr_obrazok";
 
-    // Konštruktor zabezpečí, že existuje priečinok pre QR kódy
+    // Konštruktor zabezpečí, že existuje priečinok pre QR obrázky
     public QrUkladanieServis() {
 
         pripravPriecinok();
     }
 
-    // Vytvorí priečinok pre QR kód, ak neexistuje
+    // Vytvorí priečinok pre QR obrázok, ak neexistuje
     private void pripravPriecinok() {
         try {
-            Files.createDirectories(Path.of(QR_SUBOR));
-        } catch (Exception e) {
+            Files.createDirectories(Path.of(QR_PRIECINOK));
+        } catch (IOException e) {
             throw new IllegalStateException("Chyba pri vytváraní priečinka pre QR kódy.", e);
         }
     }
@@ -31,8 +31,12 @@ public class QrUkladanieServis {
     // Uloží QR obrázok do priečinka (prepíše existujúci súbor).
     public void ulozQr(BufferedImage qrObrazok) {
 
+        if (qrObrazok == null) {
+            throw new IllegalArgumentException("QR obrázok je prázdny (null) – nie je čo uložiť.");
+        }
+
         String nazovSuboru = "qr.png";
-        Path cestaKSuboru = Path.of(QR_SUBOR, nazovSuboru);
+        Path cestaKSuboru = Path.of(QR_PRIECINOK, nazovSuboru);
 
         try {
             ImageIO.write(qrObrazok, "png", cestaKSuboru.toFile());

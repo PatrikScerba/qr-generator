@@ -44,8 +44,8 @@ public class QrServis {
 
     }
 
-    // Vytvorí text vCard formátu zo zadaných kontaktných údajov
-    private String vytvorVKartu(String meno, String priezvisko, String telefonCislo, String email) {
+    // Vytvorí text vizitky vo formáte vCard 3.0 zo zadaných údajov
+    private String vytvorVKartu(String meno, String priezvisko, String telefonneCislo, String email) {
         return """
                 BEGIN:VCARD
                 VERSION:3.0
@@ -54,19 +54,23 @@ public class QrServis {
                 TEL:%s
                 EMAIL:%s
                 END:VCARD
-                """.formatted(priezvisko, meno, meno, priezvisko, telefonCislo, email);
+                """.formatted(priezvisko, meno, meno, priezvisko, telefonneCislo, email);
     }
 
     // Vygeneruje QR obrázok zo zadaného textu pomocou knižnice ZXing.
-    private BufferedImage vytvorQrObrazok(String text, int SIRKA, int VYSKA) {
+    // - UTF-8 kvôli diakritike
+    // - ErrorCorrectionLevel.M = stredná korekcia chýb (QR sa dá načítať aj pri menšom poškodení)
+    private BufferedImage vytvorQrObrazok(String text, int sirka, int vyska) {
         try {
             Map<EncodeHintType, Object> hints = new HashMap<>();
             hints.put(EncodeHintType.CHARACTER_SET, StandardCharsets.UTF_8.name());
             hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
 
+            // Prevod textu na maticu bodov QR kódu
             BitMatrix matrix = new MultiFormatWriter()
-                    .encode(text, BarcodeFormat.QR_CODE, SIRKA, VYSKA, hints);
+                    .encode(text, BarcodeFormat.QR_CODE, sirka, vyska, hints);
 
+            // Prevod matice na obrázok( BufferedImage) pre UI
             return MatrixToImageWriter.toBufferedImage(matrix);
 
         } catch (Exception e) {
@@ -89,8 +93,9 @@ public class QrServis {
             throw new IllegalStateException("Nie sú zadané žiadne údaje pre generovanie QR kódu.");
         }
 
+        // Poskladanie textu do jedného reťazca, ktorý sa zakóduje do QR
         String text =
-                "\nMENO=" + meno +
+                "MENO=" + meno +
                         "; \nPRIEZVISKO=" + priezvisko +
                         "; \nTEL=" + telefonneCislo +
                         "; \nEMAIL=" + email +
