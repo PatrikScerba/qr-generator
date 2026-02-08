@@ -2,25 +2,20 @@
 
 Jednoduchá desktopová aplikácia v Jave (Swing) na generovanie a ukladanie QR kódov z textu alebo vizitky (vCard formát).
 Projekt demonštruje prácu so Swing GUI, generovanie QR pomocou ZXing a export obrázku na disk.
-
 ---
 
 ## 🚀 Funkcionality
-
 - Generovanie QR kódu z ľubovoľného textu
 - Náhľad QR kódu priamo v aplikácii
 - Uloženie QR kódu ako obrázka (PNG)
 - Podpora slovenskej diakritiky (UTF-8)
 - Jednoduché a prehľadné UI (rozloženie, texty, zarovnanie)
-
 ---
 
 ## 🧩 Režimy generovania QR 
-
- Aplikácia podporuje **2 spôsoby generovania QR kódu**:
+Aplikácia podporuje **2 spôsoby generovania QR kódu**:
 
 ### 1. QR z textu
-
 - ľubovoľný text
 - URL odkazy
 - Poznámky
@@ -28,12 +23,10 @@ Projekt demonštruje prácu so Swing GUI, generovanie QR pomocou ZXing a export 
 - Interné kódy
 
 QR kód obsahuje presne text, ktorý používateľ zadá.
-
 ---
 
 ### 2. QR ako vizitka (kontakt)
-
- QR kód obsahuje štruktúrované kontaktné údaje, napr:
+QR kód obsahuje štruktúrované kontaktné údaje, napr:
 
 - Meno a priezvisko
 - Telefón
@@ -41,7 +34,6 @@ QR kód obsahuje presne text, ktorý používateľ zadá.
 - Poznámka / firma
 
 Po naskenovaní sa kontakt môže uložiť priamo do mobilu.
-
 ---
 
 ## 🛠️ Použité technológie
@@ -49,29 +41,23 @@ Po naskenovaní sa kontakt môže uložiť priamo do mobilu.
 - **Swing (GUI)**
 - **FlatLaf (Look & Feel)**
 - **ZXing (QR generovanie)**
-
 ---
 
 ## 📸 Ukážky aplikácie
 
 ### Vizualizácia desktopovej aplikácie – QR generovanie
 
-
 #### Používateľské rozhranie (formulár)
-![Hlavné okno ](screenshots/ui-form.png))
+![Hlavné okno ](screenshots/ui-form.png)
 
 #### Generovanie QR vizitky (vCard)
-
 ![QR Vizitka](screenshots/qr-vcard.png)
 
 #### Generovanie QR kódu s textovým obsahom (poznámka)
-
 ![QR Text](screenshots/qr-text.png)
-
 ---
 
 ## 🗂 Štruktúra projektu
-
 ```src/
 sk.patrikscerba
 │
@@ -85,7 +71,6 @@ sk.patrikscerba
         ├── QrKod.java
         └── QrKod.form
 ```
-
 ---
 
 ## 🧪 Testovanie
@@ -102,12 +87,10 @@ sk.patrikscerba
   (naskenovanie a zobrazenie obsahu QR kódu)
 
 ### Testované prostredie
-
 - **Operačný systém:** Windows 11
 - **JDK:** Temurin JDK 21
 - **IDE:** IntelliJ IDEA
 - **Build nástroj:** Launch4j
-
 ---
 
 ## 🚀 Spustenie aplikácie
@@ -119,13 +102,10 @@ sk.patrikscerba
 ###  Klonovanie projektu
 Projekt si stiahnete cez Git:
 
-
 - **git clone https://github.com/PatrikScerba/qr-generator.git**
 
 ### 2. Ako .exe aplikácia (pre používateľov)
-
 ### Požiadavky
-
 - **Operačný systém:** Windows (testované na Windows 10 a 11)
 - **JDK/JRE:** verzia 21 
 
@@ -138,7 +118,6 @@ Ak Java nie je nainštalovaná, je možné ju stiahnuť z oficiálnej stránky:
 
 
 Aplikácia sa spúšťa dvojklikom na súbor `.exe`.
-
 ---
 
 ### Cieľ portfólia
@@ -150,7 +129,6 @@ Projekt bol vytvorený s cieľom:
 - Naučiť sa prácu s obrázkami
 - Oddeliť logiku od UI
 - Vytvoriť znovupoužiteľný QR modul
-
 ---
 
 ### Autor
